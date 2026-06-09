@@ -8,10 +8,11 @@ def maximalSquareBruteForce(matrix):
 
     # 1. Loop through every possible top-left corner (i, j)
     for i in range(rows):
+        print('i', matrix[i])
         for j in range(cols):
 
             # If the starting cell is '1', it's a potential square
-            if matrix[i][j] == 1:
+            if matrix[i][j] != 0:
                 # Minimum baseline side length for a single '1' is 1
                 possible_side = 1
                 is_valid_square = True
@@ -23,12 +24,14 @@ def maximalSquareBruteForce(matrix):
                     # Check the new row and column added by expanding to this size
                     # We check the row at index (i + possible_side)
                     for c in range(j, j + possible_side + 1):
+                        print('i:', i + possible_side, 'j:', c, 'val:', matrix[i + possible_side][c])
                         if matrix[i + possible_side][c] == 0:
                             is_valid_square = False
                             break
 
                     # We check the column at index (j + possible_side)
                     for r in range(i, i + possible_side + 1):
+                        print('i:', r, 'j:', j + possible_side, 'val:', matrix[r][j + possible_side])
                         if matrix[r][j + possible_side] == 0:
                             is_valid_square = False
                             break
@@ -49,9 +52,9 @@ def maximalSquareBruteForce(matrix):
 
 if __name__ == '__main__':
     matrix = [
-        [1, 1, 1, 0],
-        [1, 1, 1, 1],
-        [0, 1, 1, 1],
+        [2, 3, 4, 0],
+        [5, 6, 7, 8],
+        [0, 9, 1, 1],
         [0, 1, 1, 1]
     ]
     result = maximalSquareBruteForce(matrix=matrix)
