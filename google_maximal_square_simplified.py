@@ -2,43 +2,43 @@ def maximal_square_simplified(matrix):
     """
     width /wɪdθ/
     height /haɪt/
+
+
     """
     rows = len(matrix)
     cols = len(matrix[0])
-    # max width and height
     max_side_length = 0
 
     for x in range(rows):
-        print(matrix[x])
         for y in range(cols):
-            # print(matrix[x][y])
             if matrix[x][y] != 0:
-                max_possible_side_length = 1
-                is_valid_square = True
-                # Try expanding the square size
-                # The square cannot exceed the boundaries of the matrix
 
-                # Expand x asix
-                for next_x in range(max_side_length, max_side_length + 1):
-                    print('next_x', next_x, matrix[next_x][y])
-                    if matrix[next_x][y] == 0:
-                        is_valid_square = False
+                is_valid = True
+
+                # Calculate the maximum boundary limit for the current (x, y)
+                # The Goal: Checking the "Outer Shell"
+                max_limit = min(rows - x, cols - y)
+                for size in range(1, max_limit + 1):
+
+                    # 1. TOP-TO-BOTTOM FIRST (X-axis)
+                    # We scan down the right wall, starting from the higher rows
+                    for next_x in range(x, x + size):
+                        if matrix[next_x][y + size - 1] == 0:
+                            is_valid = False
+                            break
+
+                    # 2. LEFT-TO-RIGHT SECOND (Y-axis)
+                    # Only after checking the top parts do we check the very bottom floor
+                    for next_y in range(y, y + size):
+                        if matrix[x + size - 1][next_y] == 0:
+                            is_valid = False
+                            break
+
+                    # If we found a 0 anywhere in the new boundaries, stop expanding
+                    if not is_valid:
                         break
 
-                # Expand y asix
-                for next_y in range(max_side_length, max_side_length + 1):
-                    print('next_y', next_y, matrix[x][next_y])
-                    if matrix[x][next_y] == 0:
-                        is_valid_square = False
-                        break
-
-                # If we found a 0 anywhere in the new boundaries, stop expanding
-                if not is_valid_square:
-                    break
-
-                max_possible_side_length += 1
-
-                max_side_length = max(max_side_length, max_possible_side_length)
+                    max_side_length = max(max_side_length, size)
 
     # Return the final area (side * side)
     return max_side_length * max_side_length
