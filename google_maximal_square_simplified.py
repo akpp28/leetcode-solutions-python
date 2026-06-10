@@ -1,44 +1,25 @@
 def maximal_square_simplified(matrix):
-    """
-    width /wɪdθ/
-    height /haɪt/
 
-
-    """
     rows = len(matrix)
     cols = len(matrix[0])
     max_side_length = 0
 
     for x in range(rows):
         for y in range(cols):
-            if matrix[x][y] != 0:
+            if matrix[x][y] == 0:
+                continue
 
-                is_valid = True
+            # Calculate the maximum boundary limit for the current (x, y)
+            max_limit = min(rows - x, cols - y)
+            for size in range(max_side_length + 1, max_limit + 1):
+                # The "Outer Shell": right wall (X-asis) then bottom floor (Y-asis)
+                right_wall_ok = all(matrix[next_x][y + size - 1] for next_x in range(x, x + size))
+                bottom_floor_ok = all(matrix[x + size - 1][next_y] for next_y in range(y, y + size))
+                
+                if not right_wall_ok or not bottom_floor_ok:
+                    break
 
-                # Calculate the maximum boundary limit for the current (x, y)
-                # The Goal: Checking the "Outer Shell"
-                max_limit = min(rows - x, cols - y)
-                for size in range(1, max_limit + 1):
-
-                    # 1. TOP-TO-BOTTOM FIRST (X-axis)
-                    # We scan down the right wall, starting from the higher rows
-                    for next_x in range(x, x + size):
-                        if matrix[next_x][y + size - 1] == 0:
-                            is_valid = False
-                            break
-
-                    # 2. LEFT-TO-RIGHT SECOND (Y-axis)
-                    # Only after checking the top parts do we check the very bottom floor
-                    for next_y in range(y, y + size):
-                        if matrix[x + size - 1][next_y] == 0:
-                            is_valid = False
-                            break
-
-                    # If we found a 0 anywhere in the new boundaries, stop expanding
-                    if not is_valid:
-                        break
-
-                    max_side_length = max(max_side_length, size)
+                max_side_length = size
 
     # Return the final area (side * side)
     return max_side_length * max_side_length
